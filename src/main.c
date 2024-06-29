@@ -7,7 +7,7 @@
 /**
  * Prints the help message for the HuffmanCompressor utility.
  */
-void printHelp() 
+void printHelp()
 {
     printf("CHuffmanCompressor - Huffman Coding Compression Utility\n\n");
     printf("Usage:\n");
@@ -23,26 +23,42 @@ void printHelp()
 /**
  * Encodes the input file using Huffman coding and saves the result to the output file.
  *
- * @param inputfilename The name of the input file.
- * @param outputfilename The name of the output file.
+ * @inputfilename inputfilename The name of the input file.
+ * @outputfilename outputfilename The name of the output file.
  */
 void encoding(const char *inputfilename,const char *outputfilename)
 {
     FILE *inputfile = fopen(inputfilename, "rb");
 
-    if (inputfilename == NULL) 
+    if (inputfilename == NULL)
     {
         fprintf(stderr, "Error: Failed to open file %s\n", inputfilename);
         return EXIT_FAILURE;
     }
 
     fseek(inputfile, 0, SEEK_END);
-    long size = ftell(inputfile);
+    unsigned int size = ftell(inputfile);
+    rewind(inputfile);
 
-    char *data = malloc(size + 1);
-    fread(data,1,size,inputfile);
-    data[size] = '\0';
-    
+    unsigned char *data = malloc(size + 1);
+
+    if(data == NULL)
+	{
+		fprintf(stderr, "Error: Failed to allocate memory\n");
+        fclose(inputfilename);
+        exit(EXIT_FAILURE);
+	}
+	size_t bytesRead = fread(data, 1, sizeof(data), inputfile);
+	if (bytesRead != size)
+		{
+        fprintf(stderr, "Error: Failed to read the entire file %s\n", inpufFileName);
+        free(data);
+        fclose(inputfilename);
+        exit(EXIT_FAILURE);
+
+		}
+    data[size + 1] = '\0';
+
     fclose(inputfile);
 
 
@@ -55,7 +71,7 @@ void encoding(const char *inputfilename,const char *outputfilename)
  * @ argv An array of command line arguments.
  * @return The exit status of the program.
  */
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
     if (argc != 3) {
         fprintf(stderr, "Usage: %s <input_file> <output_file>\n", argv[0]);
@@ -72,7 +88,7 @@ int main(int argc, char **argv)
         return EXIT_SUCCESS;
     }
 
-    if (argc != 3) 
+    if (argc != 3)
     {
         fprintf(stderr, "Error: Invalid number of arguments\n");
         printHelp();
@@ -80,7 +96,7 @@ int main(int argc, char **argv)
     }
 
 
-    if(strcmp(opration, "encode") == 0) 
+    if(strcmp(opration, "encode") == 0)
     {
         encoding(inputfilename, outputfilename);
     }
@@ -89,7 +105,7 @@ int main(int argc, char **argv)
         decodefile(inputfilename, outputfilename);
     }
     else
-    {   
+    {
         fprintf(stderr, "Usage: %s <input_file> <output_file>\n", argv[0]);
         return EXIT_FAILURE;
     }
