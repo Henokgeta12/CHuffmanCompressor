@@ -54,12 +54,34 @@ MinHeapNode* newNode(char data, unsigned freq)
  * @capacity The capacity of the MinHeap.
  * @return A pointer to the newly created MinHeap.
  */
-MinHeap* createMinHeap(unsigned capacity) {
+MinHeap* createMinHeap(unsigned capacity) 
+{
     MinHeap* minHeap = (MinHeap*)malloc(sizeof(MinHeap));
     minHeap->size = 0;
     minHeap->capacity = capacity;
     minHeap->array = (MinHeapNode**)malloc(minHeap->capacity * sizeof(MinHeapNode*));
     return minHeap;
+}
+Copy
+Insert
+/**
+ * Swaps two MinHeapNode pointers.
+ *
+ * @a Pointer to the first MinHeapNode.
+ * @b Pointer to the second MinHeapNode.
+ *
+ * @return EXIT_FAILURE if memory allocation fails.
+ */
+void swapMinHeapNode(MinHeapNode** a, MinHeapNode** b) 
+{
+    MinHeapNode* t = *a;
+    if(t == NULL)
+    {
+        printf("Error in allocating memeory for swapping nodes\n");
+        return  EXIT_FAILURE;
+    }
+    *a = *b;
+    *b = t;
 }
 
 void encoding(const char *inputfilename,const char *outputfilename);
